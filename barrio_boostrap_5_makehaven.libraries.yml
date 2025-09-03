@@ -17,9 +17,9 @@ global-styling:
       css/components/events.css: {}
       css/components/webforms.css: {}
       css/components/progress-bar.css: {}
-      css/colors.css: {}
-    page:
+    theme:
       css/pages/frontpage.css: {}
+      css/colors.css: {}
 
 bootstrap_cdn:
   js:
