@@ -169,3 +169,8 @@ table tr th
     font-size: large;
     font-weight: bold;
 }
+
+div#main {
+    max-width: 1400px;
+    margin: auto;
+}

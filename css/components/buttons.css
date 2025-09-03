@@ -67,24 +67,26 @@ a.use-ajax[data-dialog-type="modal"] {
     border-radius: 0.2rem;
     text-decoration: none;
     color: #fff; /* White text color */
-    background-color: #007bff; /* Bootstrap primary button color */
-    border: 1px solid #007bff; /* Border color */
+    background-color: #8b1919; /* Bootstrap primary button color */
+    border: 1px solid #8b1919; /* Border color */
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
 a.use-ajax[data-dialog-type="modal"]:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-    border-color: #0056b3;
+    background-color: #710a0a; /* Darker shade on hover */
+    border-color: #710a0a;
     text-decoration: none;
 }
 
 .btn {
     background-color: #8b1919;
+    color: white;
   }
 
 
 .btn:hover {
     background-color: #720c0c;
+    color: white;
 }
 
 a.button {
@@ -115,13 +117,15 @@ a.buttton {
 }
 
 .btn-primary {
-    background-color: #8b1919;
-    border-color: #8b1919;
+    background-color: #8b1919 !important;
+    border-color: #8b1919 !important;
+    color: white !important;
 }
 
 
 .btn-primary:hover, .btn-primary:focus {
-    background-color: #710a0a;
+    background-color: #710a0a !important;
+    color: white !important;
 }
 
 button#edit-submit {
@@ -129,18 +133,6 @@ button#edit-submit {
 }
 
 a.btn.btn-primary {
-    color: white;
-}
-
-.btn-primary {
-    color: white;
-}
-.btn-primary, .btn-primary:hover, .btn-primary:focus {
-    color: white;
-}
-
-.btn:hover {
-    background-color: #720c0c;
     color: white;
 }
 

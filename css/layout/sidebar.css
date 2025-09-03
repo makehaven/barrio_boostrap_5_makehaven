@@ -21,4 +21,9 @@
 
 .sidebar_first .navbar-nav .nav-link {
     padding-left: 1rem;
+    color: #303030;
+}
+
+div#sidebar_first {
+    max-width: 275px;
 }

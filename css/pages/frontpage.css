@@ -191,3 +191,11 @@ div#block-barrio-boostrap-5-makehaven-frontemailsignup {
   div#block-barrio-boostrap-5-makehaven-fronttoolstomakeanything { min-height: 3200px; }
   div#block-barrio-boostrap-5-makehaven-frontemailsignup { min-height: 250px; }
 }
+
+.path-frontpage .service {
+    padding: 0;
+}
+
+.path-frontpage #block-slideshow-front-slideshow .vcenter-container.front-text {
+    width: 100%;
+}

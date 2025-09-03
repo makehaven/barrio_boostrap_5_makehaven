@@ -422,3 +422,7 @@ body.toolbar-tray-vertical .toolbar-tray.is-active ~ .main-content {
 .dropdown-menu .dropdown-item:focus {
     background-color: var(--bs-dropdown-link-hover-bg);
 }
+
+a.nav-link.dropdown-toggle {
+    color: #303030;
+}
