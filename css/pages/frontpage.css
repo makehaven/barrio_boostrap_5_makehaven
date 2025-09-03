@@ -1,0 +1,118 @@
+/* Frontpage */
+
+
+.path-frontpage .content img.welcome-image
+{
+    object-fit: cover;
+    width: 100%;
+    height: 160vh;
+}
+
+.path-frontpage h1.text-white {
+    text-shadow: 0px 0px 20px #000000;
+    font: 700 68px/1 Montserrat,Verdana,sans-serif;
+}
+
+
+.path-frontpage main#content {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+
+
+.path-frontpage .path-frontpage h1.text-white {
+    text-shadow: 0px 0px 20px #000000;
+    font: 700 68px/1 Montserrat,Verdana,sans-serif;
+}
+
+
+.path-frontpage .front-text a.btn:hover {
+    background: white;
+    color: red;
+    transition: all .4s ease-in;
+}
+
+.path-frontpage .front-text a.btn {
+    color: white;
+    background-color: red;
+    border: 5px solid rgba(208, 32, 32, 0.84);
+    font-weight: bold;
+    padding: 10px;
+    transition: all .4s ease-in;
+    margin: 15px;
+}
+
+
+.path-frontpage .btn:active, .btn.active {
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 3px 5px rgb(0 0 0 / 13%);
+    box-shadow: inset 0 3px 5px rgb(0 0 0 / 13%);
+}
+
+
+.path-frontpage .field--name-body.field--type-text-with-summary.field__item {
+    position: relative;
+    top: 6em;
+    height: 0px;
+}
+
+
+.path-frontpage .node__content {
+    font-size: 1.071em;
+    margin-top: 0px;
+    height: 100vh;
+}
+
+
+
+
+/* Frontpage Styles lower blocks */
+
+.path-frontpage .featured-bottom .field--type-text-with-summary.field__item
+{
+  height: auto;
+}
+
+.path-frontpage #block-makehaven-barrio-frontnotice {
+    background: lightgrey;
+}
+
+.path-frontpage #block-makehaven-barrio-threethingsfront {
+    background: #8b1919;
+}
+
+.path-frontpage .service.vertical.text-center {
+    color: white;
+}
+
+ .path-frontpage #main-wrapper{
+    width: 100%;
+  max-width: none;
+}
+
+.path-frontpage .featured-bottom
+{
+    max-width: 100%;
+}
+
+.path-frontpage section.row.region.region-featured-bottom-third {
+    background: lightgrey;
+    padding-bottom: 45px;
+}
+
+.path-frontpage .block-block-content h2 {
+    text-align: center;
+    font-size: xxx-large;
+}
+.path-frontpage #block-makehaven-barrio-emailsignup h2{
+ position: relative;
+ top: 100px;
+ }
+
+#mc_embed_signup input.email, #mc_embed_signup .button
+{
+height: 50px !important;
+font-size: 25px !import !important;
+}

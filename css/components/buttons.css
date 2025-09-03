@@ -1,0 +1,58 @@
+/* Teaser link buttons */
+
+.inline__links a, .view-civi-event-listing .views-field.views-field-nothing {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #fff;
+    background-color: #861216;
+    border-color: #861216;
+}
+
+.inline__links a:hover
+{
+    background-color: #004c79;
+    color: white;
+}
+
+nav.links.inline {
+    display: block;
+}
+
+
+
+/* Teaser taxonomy buttons */
+
+.node--view-mode-teaser .field--type-entity-reference.field__items .field__item
+
+{
+    pointer-events: none;
+    cursor: default;
+    border: solid 1px #b9b9b9;
+    border-radius: 4px;
+    padding: 5px 15px;
+    margin: 5px 15px 10px 0px;
+    font-size: 18px;
+    width: fit-content;
+    background: #8b1919;
+    color: white;
+    float: left;
+}
+
+.node--view-mode-teaser .field--type-entity-reference .field__item a
+{
+    color: #000000;
+   text-decoration: none;
+}

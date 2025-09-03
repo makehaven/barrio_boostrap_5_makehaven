@@ -1,0 +1,22 @@
+/*webforms */
+.field--type-webform .field__item {
+    padding: 10px 15px;
+    border: 1px solid grey;
+    border-top: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background: #eee;
+}
+
+
+
+.field--type-webform .field__label {
+    color: #333;
+    background-color: lightgrey;
+    border-color: grey;
+    padding: 10px 15px;
+    border-bottom: 0px solid transparent;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-weight: bold;
+}

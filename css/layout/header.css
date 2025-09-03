@@ -1,0 +1,131 @@
+/* temp align title to center and hide breadcrumb */
+#navbar-main {
+  display: flex;
+  align-items: center; /* Aligns items vertically in the center */
+  justify-content: center; /* Aligns items horizontally in the center */
+  height: 100%; /* Adjust based on your needs */
+  text-align: center; /* Ensures the text itself is centered if it wraps */
+}
+ol.breadcrumb {
+    visibility: hidden;
+}
+
+/* Secondary top user navigation bar */
+
+
+.region-secondary-menu .nav a {
+   color: #212529;
+   font-size: medium;
+   padding: 0px 1rem;
+}
+
+a.nav-link--user::before, a.nav-link--user-logout::before, a.nav-link--user-login::before
+{
+filter: invert(1);
+}
+
+.region-secondary-menu a.nav-link--community-engagement::before, .region-secondary-menu a.nav-link--member-resources::before, .region-secondary-menu a.nav-link--dashboard::before  {
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    -webkit-background-size: 1rem 1rem;
+    background-size: 1rem 1rem;
+    background-position: 0 0.25rem;
+    width: 1.5rem;
+    height: 1.2rem;
+}
+
+.region-secondary-menu a.nav-link--dashboard::before
+
+{
+background-image: url(/themes/custom/makehaven_barrio/images/speedometer2.svg);
+}
+
+.region-secondary-menu a.nav-link--facilitator-toolbox::before
+{
+background-image: url(/themes/custom/makehaven_barrio/images/wrench-adjustable-circle.svg);
+}
+
+.region-secondary-menu a.nav-link--member-resources::before
+{
+background-image: url(/themes/custom/makehaven_barrio/images/archive.svg);
+}
+
+.region-secondary-menu a.nav-link--community-engagement::before
+{
+background-image: url(/themes/custom/makehaven_barrio/images/people.svg);
+}
+
+/* Active menu item highlighting*/
+.dropdown-item.active, .dropdown-item:active {
+    color: #fff;
+    text-decoration: none;
+    background-color: #d3d3d385;
+    border-radius: 7px;
+}
+
+/* Header menu bar styles*/
+
+a.navbar-brand {
+    display: none;
+}
+a.navbar-brand img {
+    display: block;
+}
+
+
+header#header {
+    background-color: #AFAFAF;
+    border-bottom: solid red 5px
+}
+.navbar>.container
+{
+    justify-content: flex-end;
+}
+
+
+.navbar
+{
+    padding-bottom: 0rem;}
+
+.navbar-nav .nav-link
+{
+     padding: .5rem 1.5rem;
+}
+
+nav#navbar-top {
+    height: 0px;
+    z-index: 1000;
+    }
+
+.user-logged-in nav#navbar-top {
+    height: 30px;
+     }
+
+.navbar-nav .nav-link {
+    color: #303030;
+
+    font-size: 15px;
+}
+
+nav#block-makehaven-barrio-main-menu {
+    width: 100%;
+    }
+
+@media (min-width: 992px){
+.navbar-expand-lg .navbar-nav {
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+}
+}
+
+.navbar-nav .nav-link
+
+{
+font-size: 24px;
+}
+
+.dropdown-item a {
+    color: #303030;
+}
