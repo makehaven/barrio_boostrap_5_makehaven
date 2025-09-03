@@ -170,13 +170,15 @@ nav#block-barrio-boostrap-5-makehaven-useraccountmenu {
 }
 
 /* Prevent the main menu from wrapping */
-#navbar-main .navbar-collapse {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: auto; /* Prevents the main menu from taking the full width */
-    flex-grow: 0;
-    flex-basis: auto;
+@media (min-width: 768px) {
+    #navbar-main .navbar-collapse {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: auto; /* Prevents the main menu from taking the full width */
+        flex-grow: 0;
+        flex-basis: auto;
+    }
 }
 
 /* Featured Top Section Styles */

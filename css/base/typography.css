@@ -37,3 +37,11 @@ button.btn.btn-primary a {
 .field__label {
     font-weight: bold;
 }
+
+.nav-link {
+    color: #303030;
+}
+
+table tr th, table tr th a, table tr th a:hover, table tr th a:focus {
+    color: #303030;
+}
