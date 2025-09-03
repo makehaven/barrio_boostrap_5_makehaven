@@ -6,6 +6,9 @@ global-styling:
     base:
       css/base/base.css: {}
       css/base/typography.css: {}
+      css/base/general.css: {}
+      css/base/reusable.css: {}
+      css/base/theme-overrides.css: {}
     layout:
       css/layout/header.css: {}
       css/layout/footer.css: {}
@@ -17,8 +20,23 @@ global-styling:
       css/components/events.css: {}
       css/components/webforms.css: {}
       css/components/progress-bar.css: {}
+      css/components/tabs.css: {}
+      css/components/badges.css: {}
+      css/components/highlighted.css: {}
+      css/components/calendar.css: {}
+      css/components/views.css: {}
+      css/components/login.css: {}
+      css/components/cards.css: {}
+      css/components/comments.css: {}
+      css/components/images.css: {}
     theme:
       css/pages/frontpage.css: {}
+      css/pages/taxonomy.css: {}
+      css/pages/registration.css: {}
+      css/pages/contribution.css: {}
+      css/pages/profile.css: {}
+      css/pages/landing.css: {}
+      css/pages/blog.css: {}
       css/colors.css: {}
 
 bootstrap_cdn:

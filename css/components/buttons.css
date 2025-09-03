@@ -56,3 +56,110 @@ nav.links.inline {
     color: #000000;
    text-decoration: none;
 }
+
+/** Makes editable fields edit links a button */
+
+a.use-ajax[data-dialog-type="modal"] {
+    display: inline-block;
+    padding: 0.25rem 0.5rem; /* Small button padding */
+    font-size: 0.875rem; /* Small font size */
+    line-height: 1.5;
+    border-radius: 0.2rem;
+    text-decoration: none;
+    color: #fff; /* White text color */
+    background-color: #007bff; /* Bootstrap primary button color */
+    border: 1px solid #007bff; /* Border color */
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+a.use-ajax[data-dialog-type="modal"]:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+    border-color: #0056b3;
+    text-decoration: none;
+}
+
+.btn {
+    background-color: #8b1919;
+  }
+
+
+.btn:hover {
+    background-color: #720c0c;
+}
+
+a.button {
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: medium;
+    font-weight: 700;
+    line-height: 1rem;
+    color: white;
+    background-color: #8b1919;
+    padding: 12px;
+    margin: 10px 0px;
+}
+
+.btn.btn-info {
+    background: #78c0f3;
+}
+
+a.buttton {
+    background: grey;
+    padding: 10px;
+    color: white;
+    border-radius: 3px;
+}
+
+.btn-primary {
+    background-color: #8b1919;
+    border-color: #8b1919;
+}
+
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #710a0a;
+}
+
+button#edit-submit {
+    color: white;
+}
+
+a.btn.btn-primary {
+    color: white;
+}
+
+.btn-primary {
+    color: white;
+}
+.btn-primary, .btn-primary:hover, .btn-primary:focus {
+    color: white;
+}
+
+.btn:hover {
+    background-color: #720c0c;
+    color: white;
+}
+
+.button a {
+    color: white;
+}
+
+.view .more-link a {
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: medium;
+    font-weight: 700;
+    line-height: 1rem;
+    color: white;
+    background-color: #8b1919;
+    padding: 12px;
+    margin: 10px 0px;
+}

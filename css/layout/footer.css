@@ -51,3 +51,7 @@ content: none;
 .region-footer-fourth {
     text-align: center;
 }
+
+.site-footer .block {
+    border: 0;
+}
