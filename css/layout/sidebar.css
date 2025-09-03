@@ -16,4 +16,9 @@
 }
 
 .sidebar .block {
-    border-width: 0px;}
+    border-width: 0px;
+}
+
+.sidebar_first .navbar-nav .nav-link {
+    padding-left: 1rem;
+}

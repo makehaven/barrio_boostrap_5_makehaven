@@ -3,20 +3,23 @@ global-styling:
   js:
     js/global.js: {}
   css:
-    component:
+    base:
       css/base/base.css: {}
       css/base/typography.css: {}
+    layout:
       css/layout/header.css: {}
       css/layout/footer.css: {}
       css/layout/sidebar.css: {}
+    component:
       css/components/blocks.css: {}
       css/components/buttons.css: {}
       css/components/teasers.css: {}
       css/components/events.css: {}
       css/components/webforms.css: {}
       css/components/progress-bar.css: {}
-      css/pages/frontpage.css: {}
       css/colors.css: {}
+    page:
+      css/pages/frontpage.css: {}
 
 bootstrap_cdn:
   js:
