@@ -58,9 +58,9 @@ background-image: url(/themes/custom/makehaven_barrio/images/people.svg);
 
 /* Active menu item highlighting*/
 .dropdown-item.active, .dropdown-item:active {
-    color: #fff;
+    color: #000;
     text-decoration: none;
-    background-color: #d3d3d385;
+    background-color: #cccccc;
     border-radius: 7px;
 }
 
@@ -102,13 +102,18 @@ nav#block-makehaven-barrio-main-menu {
     color: #303030;
 }
 
+/* Restored from original style.css, as pointed out by code review */
+.navbar-nav .nav-link {
+    font-size: 24px;
+}
+
 /* New header styles from user */
 
 .user-logged-in nav#navbar-top {
     height: 0px;
 }
 nav#navbar-top {
-    padding-bottom: 40px;
+    padding-bottom: 10px;
     padding-top: 0px;
 }
 
@@ -420,6 +425,7 @@ body.toolbar-tray-vertical .toolbar-tray.is-active ~ .main-content {
 /* Improve hover effect */
 .dropdown-menu .dropdown-item:hover,
 .dropdown-menu .dropdown-item:focus {
+    color: #000;
     background-color: var(--bs-dropdown-link-hover-bg);
 }
 

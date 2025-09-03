@@ -199,3 +199,7 @@ div#block-barrio-boostrap-5-makehaven-frontemailsignup {
 .path-frontpage #block-slideshow-front-slideshow .vcenter-container.front-text {
     width: 100%;
 }
+
+.path-frontpage div#main {
+    max-width: 100%;
+}
