@@ -1,0 +1,62 @@
+/**
+ * Sustainable Menu Icons via CSS
+ * Targets links by their URL path.
+ */
+
+/* Base style for icons */
+.menu-item a::before {
+  font-family: "bootstrap-icons" !important;
+  display: inline-block;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  line-height: 1;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Icon Mappings by Path */
+a[href*="/user/current/coordinator"]::before { content: "\f4e6"; } /* bi-person-lines-fill */
+a[href*="/members"]::before { content: "\f52a"; } /* bi-search */
+a[href*="/appointments/hosting"]::before { content: "\f1e0"; } /* bi-calendar-check */
+a[href*="/badges/pending"]::before { content: "\f155"; } /* bi-award */
+a[href*="/appointments/hosted-past"]::before { content: "\f293"; } /* bi-clock-history */
+a[href*="/reimbursement"]::before { content: "\f233"; } /* bi-cash-stack */
+a[href*="/facilitator-nametags"]::before { content: "\f4e2"; } /* bi-person-badge */
+a[href*="/workshop-proposal"]::before { content: "\f25c"; } /* bi-chat-quote-fill */
+a[href*="/storage"]::before { content: "\f1d8"; } /* bi-box-seam */
+a[href*="/safety-concern"]::before { content: "\f33b"; } /* bi-exclamation-triangle */
+a[href*="/harassment-complaint"]::before { content: "\f53f"; } /* bi-shield-exclamation */
+a[href*="/workspace"]::before { content: "\f69b"; } /* bi-rocket-takeoff-fill */
+a[href*="/room-rentals"]::before { content: "\f1e3"; } /* bi-calendar-event */
+a[href*="/community-facilitator-program"]::before { content: "\f3a4"; } /* bi-file-earmark-medical-fill */
+a[href*="/member-referral-program"]::before { content: "\f3f4"; } /* bi-gift */
+a[href*="slack.com"]::before { content: "\f56a"; } /* bi-slack */
+a[href*="/volunteer-leadership"]::before { content: "\f149"; } /* bi-arrow-up-square-fill */
+a[href*="/wishes"]::before { content: "\f466"; } /* bi-lightbulb-fill */
+a[href*="/how-you-can-help"]::before { content: "\f658"; } /* bi-person-raised-hand */
+a[href*="/node/add/blog"]::before { content: "\f4cb"; } /* bi-pencil */
+a[href*="/form/webform-25318"]::before { content: "\f1f0"; } /* bi-calendar2-event-fill */
+a[href*="/facilitator-utilities"]::before { content: "\f62b"; } /* bi-wrench-adjustable-circle-fill */
+a[href*="/events"]::before { content: "\f1e5"; } /* bi-calendar-heart */
+a[href*="/rooms/zones/equipment"]::before { content: "\f5d1"; } /* bi-tools */
+a[href*="/member-contacts"]::before { content: "\f4ee"; } /* bi-person-rolodex */
+a[href*="/store"]::before { content: "\f23f"; } /* bi-cart */
+a[href*="/appointments"]::before { content: "\f1e0"; } /* bi-calendar-check */
+a[href*="/library"]::before { content: "\f62a"; } /* bi-wrench-adjustable */
+a[href*="/member-faq"]::before { content: "\f4b4"; } /* bi-patch-question-fill */
+a[href*="/community-resources"]::before { content: "\f1d7"; } /* bi-box-seam-fill */
+a[href*="google.com/document/d/12BdrrRmlknDRwV"]::before { content: "\f493"; } /* bi-palette */
+a[href*="youtube.com/channel"]::before { content: "\f4f4"; } /* bi-play-btn */
+a[href*="/rooms"]::before { content: "\f581"; } /* bi-square-fill */
+a[href*="bucket.makehaven.org"]::before { content: "\f282"; } /* bi-cloud-arrow-up */
+a[href*="drive.google.com/drive/u/1/folders"]::before { content: "\f4af"; } /* bi-patch-check */
+a[href*="campaign-archive.com"]::before { content: "\f32f"; } /* bi-envelope */
+a[href*="/user/current/edit"]::before { content: "\f4e1"; } /* bi-person */
+a[href*="/user/current/main"]::before { content: "\f4e3"; } /* bi-person-bounding-box */
+a[href*="/user/sms"]::before { content: "\f249"; } /* bi-chat-left-text-fill */
+a[href*="/user/current/badges"]::before { content: "\f154"; } /* bi-award-fill */
+a[href*="/increase"]::before { content: "\f42a"; } /* bi-house-heart-fill */
+a[href*="/payment-portal"]::before { content: "\f2d7"; } /* bi-currency-dollar */
+a[href*="/additional-household-member"]::before { content: "\f4e9"; } /* bi-person-plus */
