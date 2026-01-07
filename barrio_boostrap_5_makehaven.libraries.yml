@@ -6,7 +6,6 @@ global-styling:
     component:
       css/style.css: {}
       css/colors.css: {}
-      css/menu-icons.css: {}
 
 bootstrap_cdn:
   js:
