@@ -703,6 +703,80 @@ font-size: 25px !important;
 .bs-wizard > .bs-wizard-step:last-child  > .progress {width: 50%;}
 .bs-wizard > .bs-wizard-step.disabled a.bs-wizard-dot{ pointer-events: none; }
 
+/* Landing page feature grid (paragraphed cards). */
+.paragraph--type--landing-section-feature-grid .field--name-field-landing-grid-item > .field__label {
+    display: none !important;
+}
 
+.paragraph--type--landing-section-feature-grid .field--name-field-landing-grid-item .field__items,
+.paragraph--type--landing-section-feature-grid .field--name-field-landing-grid-item.field__items {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+    justify-content: center;
+}
 
+.paragraph--type--landing-section-feature-grid .field--name-field-landing-grid-item .field__items .field__item,
+.paragraph--type--landing-section-feature-grid .field--name-field-landing-grid-item.field__items > .field__item {
+    flex: 0 0 33.3333%;
+    padding: 15px;
+}
 
+.paragraph--type--landing-grid-item {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.paragraph--type--landing-grid-item .field--name-field-landing-grid-image,
+.paragraph--type--landing-grid-item .field--name-field-landing-grid-image .field__item,
+.paragraph--type--landing-grid-item .field--name-field-media-image-3,
+.paragraph--type--landing-grid-item img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+}
+
+.paragraph--type--landing-grid-item img {
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    height: 220px !important;
+}
+
+.paragraph--type--landing-grid-item .field--name-field-landing-grid-text {
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.4;
+}
+
+@media (max-width: 992px) {
+    .paragraph--type--landing-section-feature-grid .field--name-field-landing-grid-item .field__items .field__item,
+    .paragraph--type--landing-section-feature-grid .field--name-field-landing-grid-item.field__items > .field__item {
+        flex: 0 0 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .paragraph--type--landing-section-feature-grid .field--name-field-landing-grid-item .field__items .field__item,
+    .paragraph--type--landing-section-feature-grid .field--name-field-landing-grid-item.field__items > .field__item {
+        flex: 0 0 100%;
+    }
+}
+
+.feature-grid--default .paragraph--type--landing-grid-item img,
+.feature-grid--square .paragraph--type--landing-grid-item img {
+    border-radius: 0;
+}
+
+.feature-grid--rounded .paragraph--type--landing-grid-item img {
+    border-radius: 12px;
+}
+
+.feature-grid--circle .paragraph--type--landing-grid-item img {
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    height: auto !important;
+}
