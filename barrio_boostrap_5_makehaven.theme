@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_form_system_theme_settings_alter() for settings form.
@@ -30,5 +31,130 @@ function barrio_boostrap_5_makehaven_form_system_theme_settings_alter(&$form, Fo
     'bg-dark' => t('Dark'),
     'bg-white' => t('White'),
     'bg-transparent' => t('Transparent'),
+  ];
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function barrio_boostrap_5_makehaven_preprocess_node(array &$variables) {
+  if (empty($variables['node']) || !$variables['node'] instanceof NodeInterface) {
+    return;
+  }
+
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
+  if (
+    $node->getType() === 'reservation'
+    && !empty($variables['view_mode'])
+    && in_array($variables['view_mode'], ['full', 'default'], TRUE)
+  ) {
+    $variables['reservation_page'] = _barrio_boostrap_5_makehaven_build_reservation_page_data($node);
+  }
+}
+
+/**
+ * Build structured reservation display data for reservation node views.
+ */
+function _barrio_boostrap_5_makehaven_build_reservation_page_data(NodeInterface $node): array {
+  $date_formatter = \Drupal::service('date.formatter');
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $image_style_storage = \Drupal::entityTypeManager()->getStorage('image_style');
+  $thumbnail_style = $image_style_storage->load('thumbnail');
+  $status_value = (string) ($node->get('field_reservation_status')->value ?? '');
+  $purpose_value = (string) ($node->get('field_reservation_purpose')->value ?? '');
+  $cancelled = (string) ($node->get('field_reservation_cancellation')->value ?? '') === '1';
+
+  $sessions = [];
+  $seen_sessions = [];
+  $duplicate_sessions_collapsed = 0;
+  foreach ($node->get('field_reservation_time_range') as $item) {
+    $start_raw = (string) $item->value;
+    $end_raw = (string) $item->end_value;
+    if ($start_raw === '' || $end_raw === '') {
+      continue;
+    }
+
+    $key = $start_raw . '|' . $end_raw;
+    if (isset($seen_sessions[$key])) {
+      $duplicate_sessions_collapsed++;
+      continue;
+    }
+    $seen_sessions[$key] = TRUE;
+
+    $start_ts = strtotime($start_raw . ' UTC');
+    $end_ts = strtotime($end_raw . ' UTC');
+    if ($start_ts === FALSE || $end_ts === FALSE) {
+      continue;
+    }
+
+    $sessions[] = [
+      'key' => $key,
+      'start_ts' => $start_ts,
+      'end_ts' => $end_ts,
+      'date_label' => $date_formatter->format($start_ts, 'custom', 'D, M j, Y'),
+      'time_label' => $date_formatter->format($start_ts, 'custom', 'g:i a') . ' - ' . $date_formatter->format($end_ts, 'custom', 'g:i a'),
+      'duration_hours' => round(max(0, $end_ts - $start_ts) / 3600, 2),
+    ];
+  }
+
+  usort($sessions, static function (array $a, array $b): int {
+    return $a['start_ts'] <=> $b['start_ts'];
+  });
+
+  $overall = NULL;
+  if (!empty($sessions)) {
+    $first = reset($sessions);
+    $last = end($sessions);
+    $overall = [
+      'from' => $date_formatter->format($first['start_ts'], 'custom', 'D, M j, Y g:i a'),
+      'to' => $date_formatter->format($last['end_ts'], 'custom', 'D, M j, Y g:i a'),
+    ];
+  }
+
+  $assets = [];
+  $seen_assets = [];
+  $duplicate_assets_collapsed = 0;
+  foreach ($node->get('field_reservation_asset')->referencedEntities() as $asset_node) {
+    $asset_id = (int) $asset_node->id();
+    if (isset($seen_assets[$asset_id])) {
+      $duplicate_assets_collapsed++;
+      continue;
+    }
+    $seen_assets[$asset_id] = TRUE;
+    $image_url = NULL;
+    $image_alt = '';
+    if ($asset_node->hasField('field_item_image') && !$asset_node->get('field_item_image')->isEmpty()) {
+      $image_item = $asset_node->get('field_item_image')->first();
+      if ($image_item && $image_item->entity) {
+        $file_uri = $image_item->entity->getFileUri();
+        if ($thumbnail_style) {
+          $image_url = $thumbnail_style->buildUrl($file_uri);
+        }
+        else {
+          $image_url = $file_url_generator->generateString($file_uri);
+        }
+        $image_alt = (string) ($image_item->alt ?? '');
+      }
+    }
+
+    $assets[] = [
+      'title' => $asset_node->label(),
+      'url' => $asset_node->toUrl()->toString(),
+      'image_url' => $image_url,
+      'image_alt' => $image_alt !== '' ? $image_alt : $asset_node->label(),
+    ];
+  }
+
+  return [
+    'status' => $status_value !== '' ? ucfirst($status_value) : 'Unknown',
+    'purpose' => $purpose_value !== '' ? ucfirst($purpose_value) : 'Not set',
+    'cancelled' => $cancelled,
+    'sessions' => $sessions,
+    'overall' => $overall,
+    'assets' => $assets,
+    'notes' => $node->get('body')->view(['label' => 'hidden']),
+    'duplicate_sessions_collapsed' => $duplicate_sessions_collapsed,
+    'duplicate_assets_collapsed' => $duplicate_assets_collapsed,
   ];
 }
