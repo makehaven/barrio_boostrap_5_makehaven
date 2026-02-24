@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
 /**
@@ -146,6 +147,53 @@ function _barrio_boostrap_5_makehaven_build_reservation_page_data(NodeInterface 
     ];
   }
 
+  $related_event = NULL;
+  $civicrm_event_id = (int) ($node->get('field_reservation_civicrm_event')->target_id ?? 0);
+  if ($civicrm_event_id > 0) {
+    $related_event_title = '';
+
+    // Prefer explicitly linked event node title when present.
+    if ($node->hasField('field_reservation_event') && !$node->get('field_reservation_event')->isEmpty()) {
+      $event_node = $node->get('field_reservation_event')->entity;
+      if ($event_node) {
+        $related_event_title = trim((string) $event_node->label());
+      }
+    }
+
+    // Fall back to CiviCRM event title by event ID.
+    if ($related_event_title === '') {
+      try {
+        $database = \Drupal::database();
+        if ($database->schema()->tableExists('civicrm_event')) {
+          $title = $database->select('civicrm_event', 'ce')
+            ->fields('ce', ['title'])
+            ->condition('id', $civicrm_event_id)
+            ->range(0, 1)
+            ->execute()
+            ->fetchField();
+          if (is_string($title) && trim($title) !== '') {
+            $related_event_title = trim($title);
+          }
+        }
+      }
+      catch (\Throwable $e) {
+        // Keep fallback label if CiviCRM table is unavailable in this context.
+      }
+    }
+
+    $related_event = [
+      'label' => 'Related Event',
+      'url' => Url::fromUri('internal:/civicrm/event/info', [
+        'query' => [
+          'id' => $civicrm_event_id,
+          'reset' => 1,
+        ],
+      ])->toString(),
+      'event_id' => $civicrm_event_id,
+      'event_title' => $related_event_title !== '' ? $related_event_title : 'Event ' . $civicrm_event_id,
+    ];
+  }
+
   return [
     'status' => $status_value !== '' ? ucfirst($status_value) : 'Unknown',
     'purpose' => $purpose_value !== '' ? ucfirst($purpose_value) : 'Not set',
@@ -153,6 +201,7 @@ function _barrio_boostrap_5_makehaven_build_reservation_page_data(NodeInterface 
     'sessions' => $sessions,
     'overall' => $overall,
     'assets' => $assets,
+    'related_event' => $related_event,
     'notes' => $node->get('body')->view(['label' => 'hidden']),
     'duplicate_sessions_collapsed' => $duplicate_sessions_collapsed,
     'duplicate_assets_collapsed' => $duplicate_assets_collapsed,

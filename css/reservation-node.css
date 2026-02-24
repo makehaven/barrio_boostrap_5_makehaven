@@ -73,6 +73,21 @@ body.page-node-type-reservation .mh-reservation-summary-metric__value,
   color: #1f334d;
 }
 
+body.page-node-type-reservation .mh-reservation-related-event,
+.node--type-reservation.mh-reservation-page .mh-reservation-related-event,
+.mh-reservation-page .mh-reservation-related-event {
+  margin-top: 0.85rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid #ddd;
+}
+
+body.page-node-type-reservation .mh-reservation-related-event__label,
+.node--type-reservation.mh-reservation-page .mh-reservation-related-event__label,
+.mh-reservation-page .mh-reservation-related-event__label {
+  font-weight: 700;
+  margin-right: 0.3rem;
+}
+
 body.page-node-type-reservation .mh-reservation-sessions,
 body.page-node-type-reservation .mh-reservation-assets,
 body.page-node-type-reservation .mh-reservation-resources,

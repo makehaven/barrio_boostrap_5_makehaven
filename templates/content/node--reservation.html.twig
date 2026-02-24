@@ -48,6 +48,12 @@
           <span class="mh-reservation-summary-metric__value">{{ reservation_page.cancelled ? 'Yes' : 'No' }}</span>
         </li>
       </ul>
+      {% if reservation_page.related_event %}
+        <p class="mh-reservation-related-event mb-0">
+          <span class="mh-reservation-related-event__label">Related Event:</span>
+          <a href="{{ reservation_page.related_event.url }}">{{ reservation_page.related_event.event_title }}</a>
+        </p>
+      {% endif %}
     </div>
   </section>
 
