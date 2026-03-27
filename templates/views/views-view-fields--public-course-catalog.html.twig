@@ -1,0 +1,122 @@
+{#
+/**
+ * @file
+ * Template for each row of the Public Workshop Catalog view.
+ *
+ * Renders each workshop course as a card matching the site's event card style:
+ * grey background, bordered, rounded corners, image on left, text on right.
+ * Upcoming scheduled instances appear at the bottom of the card.
+ *
+ * Variables from barrio_boostrap_5_makehaven_preprocess_views_view_fields__public_course_catalog():
+ *   - workshop_node_url:        URL string for the course node.
+ *   - workshop_display_image:   Render array for the card image (course image
+ *                               or fallback from most recent linked event).
+ *   - workshop_upcoming_events:  Array of upcoming event info:
+ *       [{ url, date, time, full }, ...]
+ *   - workshop_past_count:       Number of past runs of this workshop.
+ *   - workshop_flag_link:        Render array for the "Notify Me" flag link.
+ *   - workshop_interest_count:   Number of people who have flagged interest.
+ *   - workshop_runs_count:       Total number of times this workshop has run.
+ *
+ * Standard views-view-fields variables:
+ *   - fields: Keyed array of rendered field objects (.content property).
+ */
+#}
+
+{% set node_url = workshop_node_url ?? '#' %}
+
+<article class="workshop-card">
+
+  {# ── Image (left column) ───────────────────────────────────────────────── #}
+  <div class="workshop-card-image">
+    <a href="{{ node_url }}" tabindex="-1" aria-hidden="true">
+      {% if workshop_display_image %}
+        {{ workshop_display_image }}
+      {% else %}
+        <div class="workshop-card-img-placeholder" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6zm2 0v7.586l3.293-3.293a1 1 0 0 1 1.414 0L12 13.586l3.293-3.293a1 1 0 0 1 1.414 0L20 13.586V6H4zm16 4.414-2.293-2.293-3.293 3.293a1 1 0 0 1-1.414 0L10 8.414l-3.293 3.293A1 1 0 0 1 6 12H4v6h16v-7.586zM9 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+          </svg>
+        </div>
+      {% endif %}
+    </a>
+  </div>
+
+  {# ── Text (right column) ───────────────────────────────────────────────── #}
+  <div class="workshop-card-body">
+
+    {# Title — the field renders as a linked <h3> or <a> #}
+    <h3 class="workshop-card-title">{{ fields.title.content }}</h3>
+
+    {# Topic tags / instructor expertise #}
+    {% if fields.field_instructor_expertise.content %}
+      <div class="workshop-card-tags">
+        {{ fields.field_instructor_expertise.content }}
+      </div>
+    {% endif %}
+
+    {# Short description #}
+    {% if fields.body.content %}
+      <div class="workshop-card-description">{{ fields.body.content }}</div>
+    {% endif %}
+
+    {# ── Scheduled instances ─────────────────────────────────────────────── #}
+    {% if workshop_upcoming_events %}
+      <div class="workshop-card-schedule">
+        <strong class="workshop-card-schedule-label">Upcoming sessions:</strong>
+        <ul class="workshop-card-schedule-list">
+          {% for ev in workshop_upcoming_events %}
+            <li class="workshop-card-schedule-item{% if ev.full %} is-full{% endif %}">
+              <a href="{{ ev.url }}">
+                <span class="schedule-date">{{ ev.date }}</span>
+                <span class="schedule-time">{{ ev.time }}</span>
+                {% if ev.full %}
+                  <span class="schedule-badge full">Full</span>
+                {% else %}
+                  <span class="schedule-badge open">Register &rarr;</span>
+                {% endif %}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% elseif workshop_past_count %}
+      <div class="workshop-card-schedule workshop-card-schedule--past">
+        <span class="workshop-card-schedule-label">Offered {{ workshop_past_count }}
+          {{ workshop_past_count == 1 ? 'time' : 'times' }} — check back for new dates.</span>
+      </div>
+    {% endif %}
+
+    {# ── Voting / meta footer ────────────────────────────────────────────── #}
+    <div class="workshop-card-footer">
+
+      {# "Notify Me" interest flag #}
+      <div class="workshop-card-vote">
+        {% if workshop_flag_link %}
+          {{ workshop_flag_link }}
+        {% endif %}
+        {% if workshop_interest_count > 0 %}
+          <span class="workshop-interest-count"
+                title="{{ workshop_interest_count }} {{ workshop_interest_count == 1 ? 'person' : 'people' }} want this">
+            {{ workshop_interest_count }}
+            {{ workshop_interest_count == 1 ? 'person' : 'people' }} want this
+          </span>
+        {% endif %}
+      </div>
+
+      {# Offer frequency badge #}
+      {% if workshop_runs_count %}
+        <span class="workshop-runs-badge"
+              title="Offered {{ workshop_runs_count }} {{ workshop_runs_count == 1 ? 'time' : 'times' }}">
+          ↺ {{ workshop_runs_count }}×
+        </span>
+      {% endif %}
+
+      {# "More" / View Details button #}
+      <a href="{{ node_url }}" class="workshop-card-more-btn">{{ 'More &rarr;'|t }}</a>
+
+    </div>{# /.workshop-card-footer #}
+
+  </div>{# /.workshop-card-body #}
+
+</article>{# /.workshop-card #}

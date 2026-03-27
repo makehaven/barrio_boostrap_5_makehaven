@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Template for the Public Workshop Catalog view rows (unformatted style).
+ *
+ * The surrounding .view-content div comes from views-view.html.twig.
+ * The CSS in workshop-catalog.css turns .view-content into a CSS grid and
+ * each .views-row into a grid cell so the cards are evenly laid out.
+ *
+ * Available variables:
+ *   - rows: A list of view rows; each item has:
+ *       - attributes: HTML attributes for the row wrapper.
+ *       - content:    Rendered row content (from views-view-fields--*.html.twig).
+ */
+#}
+{% for row in rows %}
+  <div{{ row.attributes.addClass('views-row') }}>
+    {{ row.content }}
+  </div>
+{% endfor %}

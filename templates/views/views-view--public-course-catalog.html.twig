@@ -1,0 +1,85 @@
+{#
+/**
+ * @file
+ * Outer wrapper template for the Public Workshop Catalog view.
+ *
+ * Adds a sort-toggle bar ("Most Offered" / "Most Wanted") above the results.
+ * Sort state is passed via ?sort= URL param and handled in hook_views_query_alter.
+ *
+ * Extra variables from barrio_boostrap_5_makehaven_preprocess_views_view__public_course_catalog():
+ *   - workshop_sort_links: array of { key, label, active, url }
+ *
+ * Standard views-view.html.twig variables apply (title, header, rows, pager, etc.).
+ */
+#}
+
+<div{{ attributes }}>
+
+  {# ── Sort toggle ─────────────────────────────────────────────────────────── #}
+  {% if workshop_sort_links %}
+    <div class="workshop-sort-bar" role="navigation" aria-label="Sort workshops">
+      <span class="workshop-sort-label">Sort by:</span>
+      {% for link in workshop_sort_links %}
+        <a href="{{ link.url }}"
+           class="workshop-sort-btn{% if link.active %} active{% endif %}"
+           {% if link.active %}aria-current="true"{% endif %}>
+          {{ link.label }}
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {# ── Standard view output ─────────────────────────────────────────────── #}
+  {% if title %}
+    {{ title }}
+  {% endif %}
+
+  {% if header %}
+    <div class="view-header">
+      {{ header }}
+    </div>
+  {% endif %}
+
+  {% if exposed %}
+    <div class="view-filters">
+      {{ exposed }}
+    </div>
+  {% endif %}
+
+  {% if attachment_before %}
+    <div class="attachment attachment-before">
+      {{ attachment_before }}
+    </div>
+  {% endif %}
+
+  {% if rows %}
+    <div class="view-content">
+      {{ rows }}
+    </div>
+  {% elseif empty %}
+    <div class="view-empty">
+      {{ empty }}
+    </div>
+  {% endif %}
+
+  {% if pager %}
+    {{ pager }}
+  {% endif %}
+
+  {% if attachment_after %}
+    <div class="attachment attachment-after">
+      {{ attachment_after }}
+    </div>
+  {% endif %}
+
+  {% if more %}
+    {{ more }}
+  {% endif %}
+
+  {% if footer %}
+    <div class="view-footer">
+      {{ footer }}
+    </div>
+  {% endif %}
+
+</div>

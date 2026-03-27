@@ -10,6 +10,332 @@ use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
 /**
+ * Implements hook_preprocess_views_view() for public_course_catalog.
+ *
+ * Attaches the CSS library and passes sort-toggle data to the template.
+ */
+function barrio_boostrap_5_makehaven_preprocess_views_view__public_course_catalog(array &$variables): void {
+  $variables['#attached']['library'][] = 'barrio_boostrap_5_makehaven/workshop-catalog';
+  $variables['#cache']['contexts'][] = 'url.query_args:sort';
+  $variables['#cache']['contexts'][] = 'user.roles:authenticated';
+
+  $request   = \Drupal::request();
+  $sort_by   = $request->query->get('sort', 'frequency');
+  $base_path = $request->getPathInfo();
+
+  $variables['workshop_sort_current'] = $sort_by;
+  $variables['workshop_sort_links']   = [
+    [
+      'key'    => 'frequency',
+      'label'  => 'Most Offered',
+      'active' => $sort_by === 'frequency',
+      'url'    => $base_path . '?sort=frequency',
+    ],
+    [
+      'key'    => 'interest',
+      'label'  => '★ Most Wanted',
+      'active' => $sort_by === 'interest',
+      'url'    => $base_path . '?sort=interest',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_views_view_fields() for public_course_catalog.
+ *
+ * Provides:
+ *  - workshop_node_url: URL string for the course node.
+ *  - workshop_display_image: render array for the card image (course image, or
+ *    fallback from the most recent linked CiviCRM event that has one).
+ *  - workshop_upcoming_events: array of upcoming event data for this course:
+ *      [['url' => '/civicrm-event/N', 'date' => 'Sat, Mar 29', 'full' => bool], ...]
+ *  - workshop_past_events_count: int, number of past runs.
+ */
+function barrio_boostrap_5_makehaven_preprocess_views_view_fields__public_course_catalog(array &$variables): void {
+  /** @var \Drupal\views\ResultRow $row */
+  $row = $variables['row'];
+  /** @var \Drupal\views\ViewExecutable $view */
+  $view = $variables['view'];
+
+  $nid = $view->result[$row->index]->nid ?? NULL;
+  if (!$nid) {
+    return;
+  }
+
+  /** @var \Drupal\node\NodeInterface|null $node */
+  $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+  if (!$node) {
+    return;
+  }
+
+  $variables['workshop_node_url'] = $node->toUrl()->toString();
+
+  $database = \Drupal::database();
+  $current_user = \Drupal::currentUser();
+
+  try {
+    if (!$database->schema()->tableExists('civicrm_event__field_parent_course')) {
+      return;
+    }
+
+    // Find all CiviCRM event IDs linked to this course node.
+    $linked_event_ids = $database->select('civicrm_event__field_parent_course', 'pc')
+      ->fields('pc', ['entity_id'])
+      ->condition('pc.field_parent_course_target_id', (int) $nid)
+      ->execute()
+      ->fetchCol();
+  }
+  catch (\Throwable $e) {
+    return;
+  }
+
+  if (empty($linked_event_ids)) {
+    return;
+  }
+
+  $now = date('Y-m-d H:i:s');
+
+  // ── Image: course image if set, else most recent event image ──────────────
+  if (!$node->get('field_course_image')->isEmpty()) {
+    $variables['workshop_display_image'] = $node->get('field_course_image')->view([
+      'type' => 'image',
+      'label' => 'hidden',
+      'settings' => ['image_style' => 'wide', 'image_link' => ''],
+    ]);
+  }
+  else {
+    // Find the most recent event with an image using an INNER JOIN.
+    try {
+      $img_query = $database->select('civicrm_event', 'e');
+      $img_query->addField('e', 'id');
+      $img_query->join('civicrm_event__field_civi_event_image', 'img', 'img.entity_id = e.id');
+      $img_query->condition('e.id', $linked_event_ids, 'IN');
+      $img_query->condition('e.is_template', 0);
+      $img_query->orderBy('e.start_date', 'DESC');
+      $img_query->range(0, 1);
+      $event_with_image_id = $img_query->execute()->fetchField();
+    }
+    catch (\Throwable $e) {
+      $event_with_image_id = NULL;
+    }
+
+    if ($event_with_image_id) {
+      $event_entity = \Drupal::entityTypeManager()
+        ->getStorage('civicrm_event')
+        ->load($event_with_image_id);
+      if ($event_entity && $event_entity->hasField('field_civi_event_image') && !$event_entity->get('field_civi_event_image')->isEmpty()) {
+        $variables['workshop_display_image'] = $event_entity->get('field_civi_event_image')->view([
+          'type' => 'image',
+          'label' => 'hidden',
+          'settings' => ['image_style' => 'wide', 'image_link' => ''],
+        ]);
+      }
+    }
+  }
+
+  // ── Interest vote: flag link + count ─────────────────────────────────────
+  try {
+    if ($current_user->isAuthenticated()) {
+      $variables['workshop_flag_link'] = \Drupal::service('flag.link_builder')
+        ->build('node', $nid, 'course_interest', 'workshop_catalog');
+    }
+    else {
+      $login_url = Url::fromRoute('user.login', [], ['query' => ['destination' => $variables['workshop_node_url']]])->toString();
+      $variables['workshop_flag_link'] = [
+        '#markup' => '<a href="' . $login_url . '" class="login-to-notify">' . t('Login to get notification') . '</a>',
+      ];
+    }
+
+    $interest_count = $database->select('flag_counts', 'fc')
+      ->fields('fc', ['count'])
+      ->condition('fc.flag_id', 'course_interest')
+      ->condition('fc.entity_id', (int) $nid)
+      ->execute()
+      ->fetchField();
+    $variables['workshop_interest_count'] = (int) ($interest_count ?: 0);
+  }
+  catch (\Throwable $e) {
+    // Flag module may not be accessible in all contexts.
+  }
+
+  // ── Offer frequency ───────────────────────────────────────────────────────
+  $variables['workshop_runs_count'] = (int) ($node->get('field_stat_runs')->value ?? 0);
+
+  // ── Upcoming events (up to 4) ─────────────────────────────────────────────
+  try {
+    $upcoming_rows = $database->select('civicrm_event', 'e')
+      ->fields('e', ['id', 'start_date'])
+      ->condition('e.id', $linked_event_ids, 'IN')
+      ->condition('e.is_template', 0)
+      ->condition('e.is_active', 1)
+      ->condition('e.start_date', $now, '>=')
+      ->orderBy('e.start_date', 'ASC')
+      ->range(0, 4)
+      ->execute()
+      ->fetchAll();
+
+    // Fetch full-status in a single query.
+    $upcoming_ids = array_column((array) $upcoming_rows, 'id');
+    $full_ids = [];
+    if (!empty($upcoming_ids)) {
+      $full_ids = $database->select('civicrm_event__field_civi_event_full', 'f')
+        ->fields('f', ['entity_id'])
+        ->condition('f.entity_id', $upcoming_ids, 'IN')
+        ->condition('f.field_civi_event_full_value', 'full')
+        ->execute()
+        ->fetchCol();
+      $full_ids = array_flip($full_ids);
+    }
+
+    $upcoming_events = [];
+    foreach ($upcoming_rows as $ev_row) {
+      $ts = strtotime($ev_row->start_date);
+      $upcoming_events[] = [
+        'url'  => '/civicrm-event/' . $ev_row->id,
+        'date' => date('D, M j', $ts),
+        'time' => date('g:i a', $ts),
+        'full' => isset($full_ids[$ev_row->id]),
+      ];
+    }
+    $variables['workshop_upcoming_events'] = $upcoming_events;
+
+    // Past runs count.
+    $variables['workshop_past_count'] = $database->select('civicrm_event', 'e')
+      ->condition('e.id', $linked_event_ids, 'IN')
+      ->condition('e.is_template', 0)
+      ->condition('e.start_date', $now, '<')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+  }
+  catch (\Throwable $e) {
+    // Leave upcoming events empty on error.
+  }
+}
+
+/**
+ * Implements hook_preprocess_node() for the 'course' bundle.
+ *
+ * Provides data for the improved course presentation:
+ *  - workshop_upcoming_events: List of upcoming scheduled sessions.
+ *  - workshop_instructors: List of users who have taught this course.
+ *  - workshop_flag_link: "Notify Me" or Login/Register links.
+ *  - workshop_stats: Runs, interest count, etc.
+ */
+function barrio_boostrap_5_makehaven_preprocess_node__course(array &$variables): void {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
+  $nid = $node->id();
+  $database = \Drupal::database();
+  $current_user = \Drupal::currentUser();
+  $now = date('Y-m-d H:i:s');
+
+  $variables['#attached']['library'][] = 'barrio_boostrap_5_makehaven/workshop-catalog';
+  $variables['#cache']['contexts'][] = 'user.roles:authenticated';
+
+  // 1. Notification / Interest Flag.
+  try {
+    if ($current_user->isAuthenticated()) {
+      $variables['workshop_flag_link'] = \Drupal::service('flag.link_builder')
+        ->build('node', $nid, 'course_interest', 'workshop_catalog');
+    }
+    else {
+      $dest = $node->toUrl()->toString();
+      $login_url = Url::fromRoute('user.login', [], ['query' => ['destination' => $dest]])->toString();
+      $reg_url   = Url::fromRoute('user.register', [], ['query' => ['destination' => $dest]])->toString();
+      $variables['workshop_flag_link'] = [
+        '#markup' => '<div class="workshop-auth-prompt">' .
+          '<a href="' . $login_url . '" class="login-to-notify">' . t('Login') . '</a> ' .
+          t('or') . ' ' .
+          '<a href="' . $reg_url . '" class="register-to-notify">' . t('Register') . '</a> ' .
+          t('to get notified when this workshop is scheduled.') .
+          '</div>',
+      ];
+    }
+
+    $interest_count = $database->select('flag_counts', 'fc')
+      ->fields('fc', ['count'])
+      ->condition('fc.flag_id', 'course_interest')
+      ->condition('fc.entity_id', (int) $nid)
+      ->execute()
+      ->fetchField();
+    $variables['workshop_interest_count'] = (int) ($interest_count ?: 0);
+  }
+  catch (\Throwable $e) {}
+
+  // 2. Upcoming Sessions & Instructors.
+  try {
+    if ($database->schema()->tableExists('civicrm_event__field_parent_course')) {
+      $linked_event_ids = $database->select('civicrm_event__field_parent_course', 'pc')
+        ->fields('pc', ['entity_id'])
+        ->condition('pc.field_parent_course_target_id', (int) $nid)
+        ->execute()
+        ->fetchCol();
+
+      if (!empty($linked_event_ids)) {
+        // Upcoming events.
+        $upcoming_rows = $database->select('civicrm_event', 'e')
+          ->fields('e', ['id', 'start_date', 'title'])
+          ->condition('e.id', $linked_event_ids, 'IN')
+          ->condition('e.is_template', 0)
+          ->condition('e.is_active', 1)
+          ->condition('e.start_date', $now, '>=')
+          ->orderBy('e.start_date', 'ASC')
+          ->range(0, 5)
+          ->execute()
+          ->fetchAll();
+
+        $upcoming_events = [];
+        foreach ($upcoming_rows as $ev_row) {
+          $ts = strtotime($ev_row->start_date);
+          $upcoming_events[] = [
+            'url'  => '/civicrm-event/' . $ev_row->id,
+            'date' => date('D, M j, Y', $ts),
+            'time' => date('g:ia', $ts),
+          ];
+        }
+        $variables['workshop_upcoming_events'] = $upcoming_events;
+
+        // Instructors.
+        $instructor_uids = $database->select('civicrm_event__field_civi_event_instructor', 'i')
+          ->fields('i', ['field_civi_event_instructor_target_id'])
+          ->condition('i.entity_id', $linked_event_ids, 'IN')
+          ->distinct()
+          ->execute()
+          ->fetchCol();
+
+        if (!empty($instructor_uids)) {
+          $instructors = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($instructor_uids);
+          $instructor_list = [];
+          /** @var \Drupal\profile\ProfileStorageInterface $profile_storage */
+          $profile_storage = \Drupal::entityTypeManager()->getStorage('profile');
+
+          foreach ($instructors as $u) {
+            $url = $u->toUrl()->toString();
+            
+            // Try to find an 'instructor' profile for this user.
+            $profile = $profile_storage->loadByUser($u, 'instructor');
+            if ($profile) {
+              $url = $profile->toUrl()->toString();
+            }
+
+            $instructor_list[] = [
+              'name' => $u->getDisplayName(),
+              'url'  => $url,
+            ];
+          }
+          $variables['workshop_instructors'] = $instructor_list;
+        }
+      }
+    }
+  }
+  catch (\Throwable $e) {}
+
+  // 3. Stats.
+  $variables['workshop_runs_count'] = (int) ($node->get('field_stat_runs')->value ?? 0);
+}
+
+/**
  * Implements hook_form_system_theme_settings_alter() for settings form.
  *
  * Replace Barrio setting options with subtheme ones.

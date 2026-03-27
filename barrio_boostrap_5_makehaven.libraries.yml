@@ -1,3 +1,9 @@
+workshop-catalog:
+  version: VERSION
+  css:
+    component:
+      css/workshop-catalog.css: {}
+
 global-styling:
   version: VERSION
   js:
