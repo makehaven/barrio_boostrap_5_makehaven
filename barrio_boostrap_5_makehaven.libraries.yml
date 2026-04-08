@@ -8,11 +8,16 @@ global-styling:
   version: VERSION
   js:
     js/global.js: {}
+    js/interest-hierarchy.js: {}
   css:
     component:
       css/style.css: {}
       css/colors.css: {}
       css/reservation-node.css: {}
+      css/interest-hierarchy.css: {}
+  dependencies:
+    - core/drupal
+    - core/once
 
 bootstrap_cdn:
   js:
