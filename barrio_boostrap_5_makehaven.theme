@@ -312,7 +312,7 @@ function barrio_boostrap_5_makehaven_preprocess_node__course(array &$variables):
 
           foreach ($instructors as $u) {
             $url = $u->toUrl()->toString();
-            
+
             // Try to find an 'instructor' profile for this user.
             $profile = $profile_storage->loadByUser($u, 'instructor');
             if ($profile) {
@@ -326,6 +326,71 @@ function barrio_boostrap_5_makehaven_preprocess_node__course(array &$variables):
           }
           $variables['workshop_instructors'] = $instructor_list;
         }
+
+        // 4. Feedback rating — combine new event_id-linked submissions
+        //    (webform_1181) with legacy title-matched submissions.
+        $fb_total = 0;
+        $fb_count = 0;
+
+        // Source A: webform_1181, matched by event_id (accurate).
+        $sids_1181 = $database->select('webform_submission_data', 'eid')
+          ->fields('eid', ['sid'])
+          ->condition('eid.webform_id', 'webform_1181')
+          ->condition('eid.name', 'event_id')
+          ->condition('eid.value', $linked_event_ids, 'IN')
+          ->execute()
+          ->fetchCol();
+
+        if (!empty($sids_1181)) {
+          $ratings = $database->select('webform_submission_data', 'r')
+            ->fields('r', ['value'])
+            ->condition('r.webform_id', 'webform_1181')
+            ->condition('r.name', 'overall_how_satisfied_were_you_with_the_event')
+            ->condition('r.sid', $sids_1181, 'IN')
+            ->execute()
+            ->fetchCol();
+          foreach ($ratings as $val) {
+            $v = (int) $val;
+            if ($v >= 1 && $v <= 5) { $fb_total += $v; $fb_count++; }
+          }
+        }
+
+        // Source B: legacy webforms matched by event title.
+        $titles = $database->select('civicrm_event', 'e')
+          ->fields('e', ['title'])
+          ->condition('e.id', $linked_event_ids, 'IN')
+          ->execute()
+          ->fetchCol();
+
+        if (!empty($titles)) {
+          foreach ([['webform_26478', 'workshop'], ['evaluation', 'name']] as [$wid, $title_key]) {
+            $legacy_sids = $database->select('webform_submission_data', 'lt')
+              ->fields('lt', ['sid'])
+              ->condition('lt.webform_id', $wid)
+              ->condition('lt.name', $title_key)
+              ->condition('lt.value', $titles, 'IN')
+              ->execute()
+              ->fetchCol();
+            if (empty($legacy_sids)) {
+              continue;
+            }
+            $ratings = $database->select('webform_submission_data', 'lr')
+              ->fields('lr', ['value'])
+              ->condition('lr.webform_id', $wid)
+              ->condition('lr.name', 'overall')
+              ->condition('lr.sid', $legacy_sids, 'IN')
+              ->execute()
+              ->fetchCol();
+            foreach ($ratings as $val) {
+              $v = (int) $val;
+              if ($v >= 1 && $v <= 5) { $fb_total += $v; $fb_count++; }
+            }
+          }
+        }
+
+        $variables['workshop_feedback'] = $fb_count > 0
+          ? ['avg' => round($fb_total / $fb_count, 1), 'count' => $fb_count]
+          : ['avg' => 0.0, 'count' => 0];
       }
     }
   }

@@ -76,6 +76,32 @@
     {# ── Sidebar Column (Right) ─────────────────────────────────────────── #}
     <div class="col-md-4 course-sidebar">
       
+      {% if workshop_feedback and workshop_feedback.count > 0 %}
+        <div class="card mb-4 course-rating-card">
+          <div class="card-body">
+            <h5 class="card-title">{{ 'Member Ratings'|t }}</h5>
+            {% set avg = workshop_feedback.avg %}
+            {% set full_stars = avg|round(0, 'floor') %}
+            {% set has_half = (avg - full_stars) >= 0.4 %}
+            <div class="course-star-rating" aria-label="{{ avg }} out of 5 stars">
+              {%- for i in 1..5 -%}
+                {%- if i <= full_stars -%}
+                  <span class="star star-full" aria-hidden="true">★</span>
+                {%- elseif has_half and i == full_stars + 1 -%}
+                  <span class="star star-half" aria-hidden="true">★</span>
+                {%- else -%}
+                  <span class="star star-empty" aria-hidden="true">☆</span>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+            <p class="course-rating-summary">
+              <strong>{{ avg }}/5</strong>
+              <span class="text-muted small">({{ workshop_feedback.count }} {{ workshop_feedback.count == 1 ? 'rating'|t : 'ratings'|t }})</span>
+            </p>
+          </div>
+        </div>
+      {% endif %}
+
       <div class="card mb-4 course-action-card">
         <div class="card-body">
           <h5 class="card-title">{{ 'Stay Informed'|t }}</h5>
