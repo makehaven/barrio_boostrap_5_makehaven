@@ -780,3 +780,79 @@ font-size: 25px !important;
     object-fit: cover;
     height: auto !important;
 }
+
+/* Webform Likert: core sticky-header.module.css sets position:sticky on
+   table.sticky-header thead, using --drupal-displace-offset-top (admin toolbar
+   height) as the top offset. This displaces the thead down into the first body
+   row when the admin toolbar is visible. Webform likert tables are short (7
+   rows max) and don't benefit from sticky headers, so reset to static. */
+.webform-likert-table.sticky-header thead {
+    position: static !important;
+}
+
+/* Webform Likert: styled radio buttons with larger targets and brand color. */
+.webform-likert-table input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    display: block;
+    margin: 0 auto;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #adb5bd;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.webform-likert-table input[type="radio"]:hover {
+    border-color: #861216;
+    box-shadow: 0 0 0 3px rgba(134, 18, 22, 0.12);
+}
+.webform-likert-table input[type="radio"]:checked {
+    border-color: #861216;
+    background-color: #861216;
+    background-image: radial-gradient(circle, #fff 38%, transparent 42%);
+}
+.webform-likert-table input[type="radio"]:focus-visible {
+    outline: 2px solid #861216;
+    outline-offset: 2px;
+}
+.webform-likert-table-wrapper .webform-likert-table tbody td:not(:first-child) {
+    height: 3.5rem;
+    vertical-align: middle;
+    padding: 0.25rem;
+    cursor: pointer;
+}
+.webform-likert-table-wrapper .webform-likert-table tbody td:not(:first-child):hover {
+    background-color: rgba(134, 18, 22, 0.06);
+}
+
+/* Webform Likert: Bootstrap 5 resets thead to display:block, collapsing column
+   headers into the first data row. Force proper table-* display values. */
+.webform-likert-table-wrapper .webform-likert-table {
+    display: table;
+    width: 100%;
+}
+.webform-likert-table-wrapper .webform-likert-table thead {
+    display: table-header-group;
+}
+.webform-likert-table-wrapper .webform-likert-table thead tr {
+    display: table-row;
+}
+.webform-likert-table-wrapper .webform-likert-table thead th {
+    display: table-cell;
+    vertical-align: bottom;
+    padding: 0.4rem 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+}
+.webform-likert-table-wrapper .webform-likert-table tbody {
+    display: table-row-group;
+}
+.webform-likert-table-wrapper .webform-likert-table tbody tr {
+    display: table-row;
+}
+.webform-likert-table-wrapper .webform-likert-table tbody td {
+    display: table-cell;
+}
