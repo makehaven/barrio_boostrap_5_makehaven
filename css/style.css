@@ -182,6 +182,9 @@ header#header {
     background-color: #AFAFAF;
     border-bottom: solid red 5px
 }
+header#header a.navbar-brand {
+    padding-left: 1.5rem;
+}
 .navbar>.container
 {
     justify-content: flex-end;
