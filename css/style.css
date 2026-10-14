@@ -859,3 +859,46 @@ font-size: 25px !important;
 .webform-likert-table-wrapper .webform-likert-table tbody td {
     display: table-cell;
 }
+
+/* CiviCRM public profiles (e.g. the newsletter signup, gid=36): first name,
+   last name and email share one row on wider screens instead of three
+   stacked full-width rows. Every other part of the form keeps a full row. */
+@media (min-width: 768px) {
+  .page-civicrm-profile #crm-profile-block {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+  .page-civicrm-profile #crm-profile-block > * {
+    grid-column: 1 / -1;
+  }
+  .page-civicrm-profile #crm-profile-block > #editrow-first_name,
+  .page-civicrm-profile #crm-profile-block > #editrow-last_name,
+  .page-civicrm-profile #crm-profile-block > #editrow-email-Primary {
+    grid-column: auto;
+  }
+}
+/* CiviCRM sizes these with an !important width read from this variable. */
+.page-civicrm-profile #crm-profile-block > #editrow-first_name,
+.page-civicrm-profile #crm-profile-block > #editrow-last_name,
+.page-civicrm-profile #crm-profile-block > #editrow-email-Primary {
+  --crm-input-width: 100%;
+  --crm-f-input-width: 100%;
+}
+/* The submit button sat 220px in, under a label column the form no longer
+   has, and ran off the card on phones. */
+.page-civicrm-profile #crm-profile-block .crm-submit-buttons button {
+  margin-left: 0;
+}
+/* Checkbox lists (Area of Interest) print four per line; on phones that
+   leaves one or two words per line. */
+@media (max-width: 767.98px) {
+  .page-civicrm-profile #crm-profile-block .crm-multiple-checkbox-radio-options {
+    --crm-opts-per-line: 2 !important;
+  }
+}
+@media (max-width: 479.98px) {
+  .page-civicrm-profile #crm-profile-block .crm-multiple-checkbox-radio-options {
+    --crm-opts-per-line: 1 !important;
+  }
+}
